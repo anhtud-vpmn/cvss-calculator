@@ -27,7 +27,7 @@
 </head>
 
 <body>
-    <p>CVSS v3 Base Score Calculator</p>
+    <!-- <p>CVSS v3 Base Score Calculator</p> -->
     <div id="cvssboard">
     </div>
     <small id="footer">
@@ -38,7 +38,8 @@ Copyright 2017 © Chandan
         var c = new CVSS("cvssboard", {
             onchange: function() {
                 window.location.hash = c.get().vector;
-                c.vector.setAttribute('href', '#' + c.get().vector)
+                c.vector.innerHTML =  `\`${c.get().score}\` ${c.get().vector}`;
+                c.vector.setAttribute('style', "width:380px");
             }
         });
         if (window.location.hash.substring(1).length > 0) {

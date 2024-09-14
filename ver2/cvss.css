@@ -1,6 +1,6 @@
 .cvssjs {
-    transform: scale(0.75); /* Scale everything to 90% */
-    transform-origin: 0 0; /* Set the origin to the top-left corner to avoid shifting */
+    transform: scale(0.75); 
+    transform-origin: 0 0; 
 }
 
 .cvssjs i {

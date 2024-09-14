@@ -1,57 +1,3 @@
-/* Copyright (c) 2015, Chandan B.N.
- *
- * Copyright (c) 2015, FIRST.ORG, INC
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- * following conditions are met:
- * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *    disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *    following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote
- *    products derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*
-
-CVSSjs Version 0.1 beta
-
-Usage:
-    craete an html element with an id for eg.,
-    <div id="cvssboard"></div>
-
-    // create a new instance of CVSS calculator:
-    var c = new CVSS("cvssboard");
-
-    // create a new instance of CVSS calculator with some event handler callbacks
-    var c = new CVSS("cvssboard", {
-                onchange: function() {....} //optional
-                onsubmit: function() {....} //optional
-                }
-                
-    // set a vector
-    c.set('AV:L/AC:L/PR:N/UI:N/S:C/C:N/I:N/A:L');
-    
-    //get the value
-    c.get() returns an object like:
-
-    {
-        score: 4.3,
-        vector: 'AV:L/AC:L/PR:N/UI:N/S:C/C:N/I:N/A:L'
-    }
-    
-*/
-
 var CVSS = function (id, options) {
     this.options = options;
     this.wId = id;
@@ -246,9 +192,11 @@ var CVSS = function (id, options) {
     l.appendChild(this.score = e('span'));
     this.score.className = 'score';
     l.appendChild(document.createTextNode(' '));
-    l.appendChild(this.vector = e('a'));
-    this.vector.className = 'vector';
-    this.vector.innerHTML = 'CVSS:3.0/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_';
+    this.vector = e('textarea');
+    // this.vector.setAttribute("type", "text");
+    this.vector.setAttribute("value",'CVSS:3.0/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_');
+    // this.vector.className = 'vector';
+    l.appendChild(this.vector);
     
     if (options.onsubmit) {
         f.appendChild(e('hr'));
@@ -411,7 +359,7 @@ CVSS.prototype.calculate = function () {
 CVSS.prototype.get = function() {
     return {
         score: this.score.innerHTML,
-        vector: this.vector.innerHTML
+        vector: this.vector.innerHTML,
     };
 };
 

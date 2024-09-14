@@ -21,24 +21,17 @@
             background-color: #e0e4e4;
             font-family: arial;
             padding: 1em;
-            text-align: center;
-            align-content: center;
         }
         #footer {
             font-size: x-small;
         }
-        #cvssboard {
-            text-align: center;
-            align-content: center;
-        }
-        #footer, H3 {
+
+        #footer, sH3 {
             color: gray;
         }
 @media screen and (min-width: 720px) {
         #cvssboard {
             width: 640px;
-            align-content: center;
-            display: inline-block;
         }
 }
     </style>
@@ -58,8 +51,8 @@ Copyright 2019 © Chandan
         var c = new CVSS("cvssboard", {
             onchange: function() {
                 window.location.hash = c.get().vector;
-                c.vector.setAttribute('value', c.get().vector);
-                c.vector.setAttribute('style', "width:100%");
+                c.vector.innerHTML =  `\`${c.get().score}\` ${c.get().vector}`;
+                c.vector.setAttribute('style', "width:380px");
             }
         });
         if (window.location.hash.substring(1).length > 0) {
