@@ -1,4 +1,3 @@
-
 var CVSS = function (id, options) {
     this.options = options;
     this.wId = id;

@@ -252,8 +252,112 @@ CVSS.prototype.valueofradio = function(e) {
     return null;
 };
 
+// CVSS.prototype.calculate = function () {
+//     var cvssVersion = "3.0";
+//     var exploitabilityCoefficient = 8.22;
+//     var scopeCoefficient = 1.08;
+
+//     // Define associative arrays mapping each metric value to the constant used in the CVSS scoring formula.
+//     var Weight = {
+//         AV: {
+//             N: 0.85,
+//             A: 0.62,
+//             L: 0.55,
+//             P: 0.2
+//         },
+//         AC: {
+//             H: 0.44,
+//             L: 0.77
+//         },
+//         PR: {
+//             U: {
+//                 N: 0.85,
+//                 L: 0.62,
+//                 H: 0.27
+//             },
+//             // These values are used if Scope is Unchanged
+//             C: {
+//                 N: 0.85,
+//                 L: 0.68,
+//                 H: 0.5
+//             }
+//         },
+//         // These values are used if Scope is Changed
+//         UI: {
+//             N: 0.85,
+//             R: 0.62
+//         },
+//         S: {
+//             U: 6.42,
+//             C: 7.52
+//         },
+//         C: {
+//             N: 0,
+//             L: 0.22,
+//             H: 0.56
+//         },
+//         I: {
+//             N: 0,
+//             L: 0.22,
+//             H: 0.56
+//         },
+//         A: {
+//             N: 0,
+//             L: 0.22,
+//             H: 0.56
+//         }
+//         // C, I and A have the same weights
+
+//     };
+
+//     var p;
+//     var val = {}, metricWeight = {};
+//     try {
+//         for (p in this.bg) {
+//             val[p] = this.valueofradio(this.calc.elements[p]);
+//             if (typeof val[p] === "undefined" || val[p] === null) {
+//                 return "?";
+//             }
+//             metricWeight[p] = Weight[p][val[p]];
+//         }
+//     } catch (err) {
+//         return err; // TODO: need to catch and return sensible error value & do a better job of specifying *which* parm is at fault.
+//     }
+//     metricWeight.PR = Weight.PR[val.S][val.PR];
+//     //
+//     // CALCULATE THE CVSS BASE SCORE
+//     //
+//     try {
+//     var baseScore;
+//     var impactSubScore;
+//     var exploitabalitySubScore = exploitabilityCoefficient * metricWeight.AV * metricWeight.AC * metricWeight.PR * metricWeight.UI;
+//     var impactSubScoreMultiplier = (1 - ((1 - metricWeight.C) * (1 - metricWeight.I) * (1 - metricWeight.A)));
+//     if (val.S === 'U') {
+//         impactSubScore = metricWeight.S * impactSubScoreMultiplier;
+//     } else {
+//         impactSubScore = metricWeight.S * (impactSubScoreMultiplier - 0.029) - 3.25 * Math.pow(impactSubScoreMultiplier - 0.02, 15);
+//     }
+
+
+//     if (impactSubScore <= 0) {
+//         baseScore = 0;
+//     } else {
+//         if (val.S === 'U') {
+//             baseScore = Math.min((exploitabalitySubScore + impactSubScore), 10);
+//         } else {
+//             baseScore = Math.min((exploitabalitySubScore + impactSubScore) * scopeCoefficient, 10);
+//         }
+//     }
+
+//     baseScore = Math.ceil(baseScore * 10) / 10;
+//     return baseScore;
+//     } catch (err) {
+//         return err;
+//     }
+// };
+
 CVSS.prototype.calculate = function () {
-    var cvssVersion = "3.0";
+    var cvssVersion = "3.1";
     var exploitabilityCoefficient = 8.22;
     var scopeCoefficient = 1.08;
 
@@ -327,30 +431,34 @@ CVSS.prototype.calculate = function () {
     //
     // CALCULATE THE CVSS BASE SCORE
     //
+    var roundUp1 = function Roundup(input) {
+        var int_input = Math.round(input * 100000);
+        if (int_input % 10000 === 0) {
+            return int_input / 100000
+        } else {
+            return (Math.floor(int_input / 10000) + 1) / 10
+        }
+    };
     try {
-    var baseScore;
-    var impactSubScore;
-    var exploitabalitySubScore = exploitabilityCoefficient * metricWeight.AV * metricWeight.AC * metricWeight.PR * metricWeight.UI;
+    var baseScore, impactSubScore, impact, exploitability;
     var impactSubScoreMultiplier = (1 - ((1 - metricWeight.C) * (1 - metricWeight.I) * (1 - metricWeight.A)));
     if (val.S === 'U') {
         impactSubScore = metricWeight.S * impactSubScoreMultiplier;
     } else {
         impactSubScore = metricWeight.S * (impactSubScoreMultiplier - 0.029) - 3.25 * Math.pow(impactSubScoreMultiplier - 0.02, 15);
     }
-
-
+    var exploitabalitySubScore = exploitabilityCoefficient * metricWeight.AV * metricWeight.AC * metricWeight.PR * metricWeight.UI;
     if (impactSubScore <= 0) {
         baseScore = 0;
     } else {
         if (val.S === 'U') {
-            baseScore = Math.min((exploitabalitySubScore + impactSubScore), 10);
+            baseScore = roundUp1(Math.min((exploitabalitySubScore + impactSubScore), 10));
         } else {
-            baseScore = Math.min((exploitabalitySubScore + impactSubScore) * scopeCoefficient, 10);
+            baseScore = roundUp1(Math.min((exploitabalitySubScore + impactSubScore) * scopeCoefficient, 10));
         }
     }
 
-    baseScore = Math.ceil(baseScore * 10) / 10;
-    return baseScore;
+    return baseScore.toFixed(1);
     } catch (err) {
         return err;
     }
