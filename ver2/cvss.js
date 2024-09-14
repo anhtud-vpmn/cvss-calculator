@@ -190,8 +190,10 @@ var CVSS = function (id, options) {
     l.className = 'results';
     l.appendChild(this.severity = e('span'));
     this.severity.className = 'severity';
-    l.appendChild(this.score = e('span'));
+    this.score = e('span');
     this.score.className = 'score';
+    this.score.setAttribute("style", "display: none;");
+    l.appendChild(this.score);
     l.appendChild(document.createTextNode(' '));
     this.vector = e('textarea');
     // this.vector.setAttribute("type", "text");
