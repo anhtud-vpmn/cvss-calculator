@@ -52,7 +52,7 @@ Copyright 2019 © Chandan
             onchange: function() {
                 window.location.hash = c.get().vector;
                 c.vector.innerHTML =  `\`${c.get().score}\` ${c.get().vector}`;
-                c.vector.setAttribute('style', "width:380px");
+                
             }
         });
         if (window.location.hash.substring(1).length > 0) {
