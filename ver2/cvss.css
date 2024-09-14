@@ -258,6 +258,10 @@
     display: inline-block;
 }
 
+.severity {
+    overflow: auto;
+}
+
 .cvssjs .score {
     width: 1.5em;
 }
