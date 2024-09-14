@@ -197,7 +197,7 @@ var CVSS = function (id, options) {
     l.appendChild(document.createTextNode(' '));
     this.vector = e('textarea');
     // this.vector.setAttribute("type", "text");
-    this.vector.setAttribute("value",'CVSS:3.0/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_');
+    this.vector.setAttribute("placeholder",'`0.0` CVSS:3.0/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_');
     // this.vector.className = 'vector';
     l.appendChild(this.vector);
     
